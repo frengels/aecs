@@ -6,6 +6,8 @@
 
 namespace aecs
 {
+namespace component
+{
 namespace make_container_impl
 {
 template<typename T>
@@ -35,16 +37,19 @@ inline namespace cpo
 template<typename T>
 struct make_container_fn
 {
-    constexpr auto operator()() const noexcept(noexcept(
-        ::aecs::make_container_impl::make_container<T>(max_priority_tag)))
-        -> decltype(
-            ::aecs::make_container_impl::make_container<T>(max_priority_tag))
+    constexpr auto operator()() const noexcept(
+        noexcept(::aecs::component::make_container_impl::make_container<T>(
+            max_priority_tag)))
+        -> decltype(::aecs::component::make_container_impl::make_container<T>(
+            max_priority_tag))
     {
-        return ::aecs::make_container_impl::make_container<T>(max_priority_tag);
+        return ::aecs::component::make_container_impl::make_container<T>(
+            max_priority_tag);
     }
 };
 
 template<typename T>
 inline constexpr auto make_container = make_container_fn<T>{};
 } // namespace cpo
+} // namespace component
 } // namespace aecs
