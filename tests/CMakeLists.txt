@@ -1,5 +1,6 @@
 set(TESTS
   make_container
+  nameof
 )
 
 find_package(Catch2 REQUIRED)
