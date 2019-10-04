@@ -1,6 +1,7 @@
 set(TESTS
   make_container
   nameof
+  sha1
 )
 
 find_package(Catch2 REQUIRED)
