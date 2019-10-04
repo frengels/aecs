@@ -1,6 +1,6 @@
 set(TESTS
   make_container
-  nameof
+  name
   sha1
 )
 
