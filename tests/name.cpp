@@ -28,6 +28,9 @@ constexpr auto name(aecs::component::type_identity<my::external_named>)
 }
 } // namespace my
 
+struct unspecified_name
+{};
+
 TEST_CASE("nameof")
 {
     constexpr auto char_n =
@@ -42,4 +45,8 @@ TEST_CASE("nameof")
     constexpr auto external_n = aecs::component::name(
         aecs::component::type_identity<my::external_named>{});
     static_assert(external_n == "external_named");
+
+    constexpr auto unspecified_n = aecs::component::name(
+        aecs::component::type_identity<unspecified_name>{});
+    static_assert(unspecified_n == "unspecified_name");
 }
