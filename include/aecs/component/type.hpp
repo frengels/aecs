@@ -53,7 +53,7 @@ constexpr auto component_name(
 }
 } // namespace component_name_impl
 
-inline namespace cpo
+namespace detail
 {
 struct component_name_fn
 {
@@ -75,14 +75,14 @@ struct component_name_fn
 };
 
 inline constexpr auto component_name = component_name_fn{};
-} // namespace cpo
+} // namespace detail
 
 struct component_hash_fn
 {
     template<typename T>
     constexpr auto operator()(aecs::component_type<T>) const noexcept
     {
-        constexpr auto n    = aecs::component_name(aecs::component_type<T>{});
+        constexpr auto n    = aecs::component_type<T>::name();
         constexpr auto hash = aecs::sha1(n);
         return hash;
     }
@@ -151,7 +151,7 @@ inline constexpr auto component_hash = component_hash_fn{};
 template<typename T>
 constexpr std::string_view component_type<T>::name() noexcept
 {
-    return aecs::component_name(component_type<T>{});
+    return aecs::detail::component_name(component_type<T>{});
 }
 
 template<typename T>
