@@ -4,6 +4,7 @@ set(TESTS
   name
   sha1
   inplace_function
+  constraint
 )
 
 find_package(Catch2 REQUIRED)
