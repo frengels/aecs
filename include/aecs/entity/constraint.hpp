@@ -2,7 +2,7 @@
 
 #include <array>
 
-#include "aecs/component/hash.hpp"
+#include "aecs/component/type.hpp"
 
 namespace aecs
 {
@@ -33,20 +33,19 @@ private:
 public:
     template<access A, typename T>
     constexpr constraint(static_constraint<A, T>) noexcept
-        : constraint{A, aecs::component::type_identity<T>{}}
+        : constraint{A, aecs::component_type<T>{}}
     {}
 
     template<typename T>
     constexpr constraint(access a, std::in_place_type_t<T>) noexcept
-        : constraint{a, aecs::component::type_identity<T>{}}
+        : constraint{a, aecs::component_type<T>{}}
     {}
 
     template<typename T>
-    constexpr constraint(access a, aecs::component::type_identity<T>) noexcept
+    constexpr constraint(access a, aecs::component_type<T>) noexcept
         : component_hash_{[]() {
               // make sure it's really computed at compilation time
-              constexpr auto h =
-                  aecs::component::hash(aecs::component::type_identity<T>{});
+              constexpr auto h = aecs::component_type<T>::hash();
               return h;
           }()},
           access_{a}

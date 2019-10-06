@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "aecs/component/hash.hpp"
+#include "aecs/component/type.hpp"
 #include "aecs/utility/sha1.hpp"
 
 struct ex1
@@ -22,8 +22,7 @@ TEST_CASE("sha1")
 
     static_assert(example_hash == 0x40973e3a544d02bc);
 
-    constexpr auto hash =
-        aecs::component::hash(aecs::component::type_identity<ex1>{});
+    constexpr auto hash = aecs::component_type<ex1>{}.hash();
 
     static_assert(hash == example_hash);
 }

@@ -29,20 +29,18 @@ TEST_CASE("make_container")
     using aecs::component_type;
 
     // creates vector
-    auto nonempty_cont =
-        aecs::make_container(component_type<nonempty_component>{});
+    auto nonempty_cont = component_type<nonempty_component>{}.make_container();
     static_assert(std::is_same_v<std::vector<nonempty_component>,
                                  decltype(nonempty_cont)>);
 
     // specified required type
-    auto custom_cont =
-        aecs::make_container(component_type<custom_container_type>{});
+    auto custom_cont = component_type<custom_container_type>::make_container();
     static_assert(std::is_same_v<std::list<custom_container_type>,
                                  decltype(custom_cont)>);
 
     // custom function to create container
     auto custom_fn_cont =
-        aecs::make_container(component_type<custom_fn_container_type>{});
+        component_type<custom_fn_container_type>::make_container();
     static_assert(std::is_same_v<std::deque<custom_fn_container_type>,
                                  decltype(custom_fn_cont)>);
 
