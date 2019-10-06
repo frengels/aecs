@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "aecs/component/type.hpp"
 #include "aecs/utility/priority_tag.hpp"
 
 namespace aecs
@@ -21,6 +22,14 @@ constexpr auto make_container(aecs::priority_tag<3>) noexcept(noexcept(
     typename T::container_type{})) -> decltype(typename T::container_type{})
 {
     return typename T::container_type{};
+}
+
+template<typename T>
+constexpr auto make_container(aecs::priority_tag<2>) noexcept(
+    noexcept(make_container(aecs::component_type<T>{})))
+    -> decltype(make_container(aecs::component_type<T>{}))
+{
+    return make_container(aecs::component_type<T>{});
 }
 
 // default container is std::vector
