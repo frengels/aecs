@@ -45,4 +45,9 @@ TEST_CASE("make_container")
         aecs::make_container(component_type<custom_fn_container_type>{});
     static_assert(std::is_same_v<std::deque<custom_fn_container_type>,
                                  decltype(custom_fn_cont)>);
+
+    static_assert(
+        std::is_same_v<decltype(custom_fn_cont),
+                       decltype(component_type<custom_fn_container_type>{}
+                                    .make_container())>);
 }
