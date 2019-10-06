@@ -23,51 +23,48 @@ struct component_type
     static constexpr auto             make_container();
 };
 
-namespace component_name_impl
-{
-template<typename T>
-constexpr auto
-    component_name(aecs::priority_tag<4>,
-                   aecs::component_type<T>) noexcept(noexcept(T::name))
-        -> decltype(T::name)
-{
-    return T::name;
-}
-
-template<typename T>
-constexpr auto component_name(
-    aecs::priority_tag<3>,
-    aecs::component_type<T>) noexcept(noexcept(name(aecs::component_type<T>{})))
-    -> decltype(name(aecs::component_type<T>{}))
-{
-    return name(aecs::component_type<T>{});
-}
-
-template<typename T>
-constexpr auto component_name(
-    aecs::priority_tag<2>,
-    aecs::component_type<T>) noexcept(noexcept(aecs::nameof_type<T>()))
-    -> decltype(aecs::nameof_type<T>())
-{
-    return aecs::nameof_type<T>();
-}
-} // namespace component_name_impl
-
 namespace detail
 {
 struct component_name_fn
 {
+private:
     template<typename T>
-    constexpr auto operator()(aecs::component_type<T>) const noexcept(noexcept(
-        ::aecs::component_name_impl::component_name(aecs::max_priority_tag,
-                                                    aecs::component_type<T>{})))
-        -> decltype(::aecs::component_name_impl::component_name(
-                        aecs::max_priority_tag,
-                        aecs::component_type<T>{}),
-                    std::string_view{})
+    static constexpr auto
+        impl(aecs::priority_tag<4>,
+             aecs::component_type<T>) noexcept(noexcept(T::name))
+            -> decltype(T::name)
     {
-        constexpr auto n = ::aecs::component_name_impl::component_name(
-            aecs::max_priority_tag, aecs::component_type<T>{});
+        return T::name;
+    }
+
+    template<typename T>
+    static constexpr auto
+        impl(aecs::priority_tag<3>, aecs::component_type<T>) noexcept(
+            noexcept(name(aecs::component_type<T>{})))
+            -> decltype(name(aecs::component_type<T>{}))
+    {
+        return name(aecs::component_type<T>{});
+    }
+
+    template<typename T>
+    static constexpr auto
+        impl(aecs::priority_tag<0>,
+             aecs::component_type<T>) noexcept(noexcept(aecs::nameof_type<T>()))
+            -> decltype(aecs::nameof_type<T>())
+    {
+        return aecs::nameof_type<T>();
+    }
+
+public:
+    template<typename T>
+    constexpr auto operator()(aecs::component_type<T>) const
+        noexcept(noexcept(impl(aecs::max_priority_tag,
+                               aecs::component_type<T>{})))
+            -> decltype(impl(aecs::max_priority_tag, aecs::component_type<T>{}),
+                        std::string_view{})
+    {
+        constexpr auto n =
+            impl(aecs::max_priority_tag, aecs::component_type<T>{});
         // make sure string_view conversion is constexpr
         constexpr auto strv_n = std::string_view{n};
         return strv_n;
