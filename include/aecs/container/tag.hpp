@@ -3,6 +3,8 @@
 #include <type_traits>
 #include <utility>
 
+#include "aecs/component/concepts.hpp"
+
 namespace aecs
 {
 
@@ -12,10 +14,9 @@ class tag_container : private T
     static_assert(std::is_same_v<T, std::remove_cv_t<T>>,
                   "type cannot be const/volatile qualified");
     static_assert(std::is_object_v<T>);
-    static_assert(std::is_empty_v<T>, "Tags must be empty");
-    static_assert(std::is_trivially_default_constructible_v<T>,
-                  "We must be able to get a default tag to return");
-    static_assert(std::is_trivially_copyable_v<T>);
+    static_assert(
+        aecs::is_tag_component_v<T>,
+        "Tag components must be empty and trivially default constructible");
 
 public:
     using value_type      = T;
