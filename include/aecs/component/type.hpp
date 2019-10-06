@@ -22,6 +22,10 @@ struct component_type
     static constexpr std::string_view name() noexcept;
     static constexpr std::size_t      hash() noexcept;
     static constexpr auto             make_container();
+    static constexpr bool             is_tag() noexcept
+    {
+        return aecs::is_tag_component_v<T>;
+    }
 };
 
 namespace detail
