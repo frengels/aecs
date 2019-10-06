@@ -35,12 +35,12 @@ constexpr auto
 }
 
 template<typename T>
-constexpr auto
-    component_name(aecs::priority_tag<3>, aecs::component_type<T>) noexcept(
-        noexcept(component_name(aecs::component_type<T>{})))
-        -> decltype(component_name(aecs::component_type<T>{}))
+constexpr auto component_name(
+    aecs::priority_tag<3>,
+    aecs::component_type<T>) noexcept(noexcept(name(aecs::component_type<T>{})))
+    -> decltype(name(aecs::component_type<T>{}))
 {
-    return component_name(aecs::component_type<T>{});
+    return name(aecs::component_type<T>{});
 }
 
 template<typename T>

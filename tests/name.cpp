@@ -22,7 +22,7 @@ namespace my
 struct external_named
 {};
 
-constexpr auto component_name(aecs::component_type<my::external_named>)
+constexpr auto name(aecs::component_type<my::external_named>)
 {
     return "external_named";
 }
