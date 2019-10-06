@@ -1,6 +1,6 @@
 #include <catch2/catch.hpp>
 
-#include "aecs/component/make_container.hpp"
+#include "aecs/component/type.hpp"
 
 #include <deque>
 #include <list>
@@ -26,18 +26,23 @@ struct custom_fn_container_type
 
 TEST_CASE("make_container")
 {
+    using aecs::component_type;
+
     // creates vector
-    auto nonempty_cont = aecs::make_container<nonempty_component>();
+    auto nonempty_cont =
+        aecs::make_container(component_type<nonempty_component>{});
     static_assert(std::is_same_v<std::vector<nonempty_component>,
                                  decltype(nonempty_cont)>);
 
     // specified required type
-    auto custom_cont = aecs::make_container<custom_container_type>();
+    auto custom_cont =
+        aecs::make_container(component_type<custom_container_type>{});
     static_assert(std::is_same_v<std::list<custom_container_type>,
                                  decltype(custom_cont)>);
 
     // custom function to create container
-    auto custom_fn_cont = aecs::make_container<custom_fn_container_type>();
+    auto custom_fn_cont =
+        aecs::make_container(component_type<custom_fn_container_type>{});
     static_assert(std::is_same_v<std::deque<custom_fn_container_type>,
                                  decltype(custom_fn_cont)>);
 }
