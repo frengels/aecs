@@ -48,6 +48,36 @@ public:
         return size_;
     }
 
+    constexpr reference front() noexcept
+    {
+        return *this;
+    }
+
+    constexpr const_reference front() const noexcept
+    {
+        return *this;
+    }
+
+    constexpr reference back() noexcept
+    {
+        return *this;
+    }
+
+    constexpr const_reference back() const noexcept
+    {
+        return *this;
+    }
+
+    constexpr void pop_back() noexcept
+    {
+        --size_;
+    }
+
+    constexpr void pop_front() noexcept
+    {
+        --size_;
+    }
+
     template<typename... Args>
     constexpr void emplace_back(Args&&... args) noexcept(
         std::is_nothrow_constructible_v<T, Args...>)
@@ -70,7 +100,13 @@ public:
         emplace_back(t);
     }
 
-    constexpr reference operator[](std::size_t idx) const noexcept
+    constexpr reference operator[](std::size_t idx) noexcept
+    {
+        assert(idx < size());
+        return *this;
+    }
+
+    constexpr const_reference operator[](std::size_t idx) const noexcept
     {
         assert(idx < size());
         return *this;

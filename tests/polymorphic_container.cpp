@@ -3,12 +3,18 @@
 
 #include "aecs/container/wrapped.hpp"
 
+struct my_tag
+{};
+
 TEST_CASE("polymorphic_container")
 {
     SECTION("polymorphic")
     {
         std::unique_ptr<aecs::polymorphic_container> cont =
             std::make_unique<aecs::wrapped_container<int>>();
+
+        std::unique_ptr<aecs::polymorphic_container> tag_cont =
+            std::make_unique<aecs::wrapped_container<my_tag>>();
 
         REQUIRE(cont->has_component<int>());
         REQUIRE(!cont->has_component<float>());
