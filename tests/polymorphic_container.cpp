@@ -12,6 +12,7 @@ TEST_CASE("polymorphic_container")
 
         REQUIRE(cont->has_component<int>());
         REQUIRE(!cont->has_component<float>());
+        REQUIRE(!cont->has_component<int*>());
 
         auto& real_cont = cont->get<int>();
         REQUIRE(real_cont.size() == 0);
