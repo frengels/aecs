@@ -24,6 +24,14 @@ template<typename T>
     return n;
 }
 
+// This saves a lot of space which is usually wasted when using nameof. Normally
+// the binary will include the full __PRETTY_FUNCTION__ output. By using the
+// intermediary array and giving it static binding, then building a string_view
+// over this we make sure the original dirty string_view has no references
+// during runtime and therefore will not be in the binary.
+// On the other hand the array which could be in the binary if used from a
+// runtime context is only as long as need be and the additional null
+// terminator.
 template<typename T>
 struct nameof_spacesaver
 {
