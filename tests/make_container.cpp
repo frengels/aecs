@@ -10,6 +10,9 @@ struct nonempty_component
     int i, j, k;
 };
 
+struct tag_component
+{};
+
 struct custom_container_type
 {
     using container_type = std::list<custom_container_type>;
@@ -32,6 +35,11 @@ TEST_CASE("make_container")
     auto nonempty_cont = component_type<nonempty_component>{}.make_container();
     static_assert(std::is_same_v<std::vector<nonempty_component>,
                                  decltype(nonempty_cont)>);
+
+    static_assert(
+        std::is_same_v<
+            aecs::tag_container<tag_component>,
+            decltype(aecs::component_type<tag_component>::make_container())>);
 
     // specified required type
     auto custom_cont = component_type<custom_container_type>::make_container();

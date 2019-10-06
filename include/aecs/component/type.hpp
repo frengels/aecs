@@ -1,6 +1,7 @@
 #pragma once
 
 #include "aecs/component/concepts.hpp"
+#include "aecs/container/tag.hpp"
 #include "aecs/utility/nameof_type.hpp"
 #include "aecs/utility/priority_tag.hpp"
 #include "aecs/utility/sha1.hpp"
@@ -159,6 +160,16 @@ private:
             -> decltype(make_container(aecs::component_type<T>{}))
     {
         return make_container(aecs::component_type<T>{});
+    }
+
+    template<typename T,
+             typename = std::enable_if_t<aecs::is_tag_component_v<T>>>
+    static constexpr auto
+        impl(aecs::priority_tag<1>, component_type<T>) noexcept(
+            std::is_nothrow_default_constructible_v<aecs::tag_container<T>>)
+            -> aecs::tag_container<T>
+    {
+        return {};
     }
 
     template<typename T>
