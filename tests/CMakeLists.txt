@@ -5,6 +5,7 @@ set(TESTS
   sha1
   inplace_function
   constraint
+  polymorphic_container
 )
 
 find_package(Catch2 REQUIRED)

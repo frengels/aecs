@@ -1,34 +1,48 @@
 #pragma once
 
+#include "aecs/component/traits.hpp"
 #include "aecs/component/type.hpp"
 #include "aecs/container/polymorphic.hpp"
 
 namespace aecs
 {
-template<typename C>
-class wrapped_container final : polymorphic_container
+template<typename T>
+class wrapped_container final : public polymorphic_container
 {
 public:
-    using container_type = C;
-    using value_type     = typename container_type::value_type;
-
-    // static constexpr std::size_t component_hash =
+    using container_type = aecs::component_container_t<T>;
+    using value_type     = T;
 
 private:
     container_type container_;
 
 public:
-    constexpr wrapped_container(C&& c) noexcept(
-        std::is_nothrow_move_constructible_v<C>)
+    constexpr wrapped_container() noexcept(
+        noexcept(aecs::component_type<T>::make_container()))
+        : container_{aecs::component_type<T>::make_container()}
+    {}
+
+    constexpr wrapped_container(container_type&& c) noexcept(
+        std::is_nothrow_move_constructible_v<container_type>)
         : container_{std::move(c)}
     {}
 
-    constexpr wrapped_container(const C& c) noexcept(
-        std::is_nothrow_copy_constructible_v<C>)
+    constexpr wrapped_container(const container_type& c) noexcept(
+        std::is_nothrow_copy_constructible_v<container_type>)
         : container_{c}
     {}
 
     // rule of zero holds for destructor
+
+    constexpr container_type& get() noexcept
+    {
+        return container_;
+    }
+
+    constexpr const container_type& get() const noexcept
+    {
+        return container_;
+    }
 
     std::size_t size() const override
     {
@@ -40,10 +54,15 @@ public:
         return reference_hash{container_[idx]};
     }
 
+    void do_push_back(const void* ptr) override
+    {
+        const auto& ref = *static_cast<const T*>(ptr);
+        container_.push_back(ref);
+    }
+
     std::unique_ptr<polymorphic_container> replicate() const override
     {
-        return std::make_unique<polymorphic_container>(
-            aecs::component_type<value_type>::make_container());
+        return std::make_unique<wrapped_container<T>>();
     }
 
     void swap_pop(std::size_t idx) override
@@ -60,12 +79,12 @@ public:
 
     std::size_t component_hash() const override
     {
-        return aecs::component_type<value_type>::hash();
+        return aecs::component_type<T>::hash();
     }
 
     std::string_view component_name() const override
     {
-        return aecs::component_type<value_type>::name();
+        return aecs::component_type<T>::name();
     }
-}
+};
 } // namespace aecs
