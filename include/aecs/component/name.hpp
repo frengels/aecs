@@ -55,7 +55,9 @@ struct name_fn
     {
         constexpr auto n = ::aecs::component::name_impl::name(
             aecs::max_priority_tag, aecs::component::type_identity<T>{});
-        return n;
+        // make sure string_view conversion is constexpr
+        constexpr auto strv_n = std::string_view{n};
+        return strv_n;
     }
 };
 
