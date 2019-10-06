@@ -13,6 +13,9 @@ TEST_CASE("polymorphic_container")
         REQUIRE(cont->has_component<int>());
         REQUIRE(!cont->has_component<float>());
 
+        auto& real_cont = cont->get<int>();
+        REQUIRE(real_cont.size() == 0);
+
         BENCHMARK("poly_push_back")
         {
             for (auto i = 0; i < 10; ++i)
