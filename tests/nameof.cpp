@@ -19,9 +19,8 @@ TEST_CASE("nameof")
 
     using abc::def::hi;
 
-    constexpr auto complex_type =
-        aecs::nameof_type<volatile const hi<std::integral_constant<int, 5>,
-                                            long long unsigned int>&&>();
+    constexpr auto complex_type = aecs::nameof_type<
+        hi<std::integral_constant<int, 5>, long long unsigned int>>();
 
     constexpr auto expected =
         "abc::def::hi<std::integral_constant<int, 5>, long long unsigned int>";
