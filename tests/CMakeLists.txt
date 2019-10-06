@@ -6,6 +6,7 @@ set(TESTS
   inplace_function
   constraint
   polymorphic_container
+  tag_container
 )
 
 find_package(Catch2 REQUIRED)
